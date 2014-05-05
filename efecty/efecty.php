@@ -94,7 +94,7 @@ class Efecty extends PaymentModule
 			}
 
 			$orderState->send_email = true;
-			$orderState->color = 'royalblue';
+			$orderState->color = 'goldenrod';
 			$orderState->hidden = false;
 			$orderState->delivery = false;
 			$orderState->logable = false;
