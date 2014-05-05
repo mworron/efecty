@@ -151,7 +151,7 @@ class Efecty extends PaymentModule
 		}
 
 		$this->_html .= $this->_displayEfecty();
-		$this->_html .= $this->renderForm();
+		$this->_html .= $this->_renderForm();
 
 		return $this->_html;
 	}
