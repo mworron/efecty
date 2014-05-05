@@ -179,7 +179,7 @@ class Efecty extends PaymentModule
 			Configuration::updateValue('EFECTY_NAME', pSQL(Tools::getValue('EFECTY_NAME')));
 			Configuration::updateValue('EFECTY_DETAILS', pSQL(Tools::getValue('EFECTY_DETAILS')));
 		}
-		$this->_html .= $this->displayConfirmation($this->l('Settings updated');
+		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 
 	private function _renderForm()
