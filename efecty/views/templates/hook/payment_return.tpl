@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,33 +18,30 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if $status == 'ok'}
-		<div class="block_content">
-		<p class="success">
-		{l s='Your order on %s is complete.' sprintf=$shop_name mod='efecty'}</p>
-		<h1>{l s='Payment Details:' mod='efecty'}</h1>
-            {l s='Amount of payment:' mod='efecty'}   <span class="price"> <strong>{$total_to_pay}</strong></span>
-            <br /><br /> {l s='To the account owner:' mod='efecty'}   <strong>{if $efectyowner}{$efectyowner}{else}___________{/if}</strong>
-            <br /><br /> {l s='With these details:' mod='efecty'}   <strong>{if $efectydetails}{$efectydetails}{else}___________{/if}</strong>
-       
+	<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='efecty'}
+		<br /><br />
+		{l s='Your check must include:' mod='efecty'}
+		<br /><br />- {l s='Payment amount.' mod='efecty'} <span class="price"><strong>{$total_to_pay|escape:'html'}</strong></span>
+		<br /><br />- {l s='Payable to the order of' mod='efecty'} <strong>{if $efecty_name}{$efecty_name|escape:'html'}{else}___________{/if}</strong>
+		<br /><br />- {l s='Mail to' mod='efecty'} <strong>{if $efecty_details}{$efecty_details|escape:'html'}{else}___________{/if}</strong>
 		{if !isset($reference)}
-			<br /><br /><strong>{l s='Do not forget to insert your order number #%d in the subject of your Efecty payment' sprintf=$id_order mod='efecty'}</strong>
+			<br /><br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order|escape:'html' mod='efecty'}
 		{else}
-			<br /><br /><strong>{l s='Do not forget to insert your order reference %s in the subject of your Efecty payment.' sprintf=$reference mod='efecty'}</strong>
-		{/if}		
-        <br /><br />{l s='An e-mail has been sent to you with this information.' mod='efecty'}
-		<br /><br /> <strong>{l s='Your order will be sent as soon as we receive your settlement.' mod='efecty'}</strong>
-		<br /><br />{l s='For any questions or for further information, please contact our' mod='efecty'} <a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='efecty'}</a>.
+			<br /><br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference|escape:'html' mod='efecty'}
+		{/if}
+		<br /><br />{l s='An email has been sent to you with this information.' mod='efecty'}
+		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment report with the invoice number and DV.' mod='efecty'}</strong>
+		<br /><br />{l s='For any questions or for further information, please contact our' mod='efecty'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='efecty'}</a>.
 	</p>
-</div>
 {else}
 	<p class="warning">
-		{l s='We noticed a problem with your order. If you think this is an error, you can contact our' mod='efecty'} 
-		<a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='efecty'}</a>.
+		{l s='We have noticed that there is a problem with your order. If you think this is an error, you can contact our' mod='efecty'} 
+		<a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='efecty'}</a>.
 	</p>
 {/if}
