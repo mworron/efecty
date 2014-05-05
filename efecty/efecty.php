@@ -48,7 +48,7 @@ class Efecty extends PaymentModule
 		if (isset($config['EFECTY_NAME']))
 			$this->efecty_name = $config['EFECTY_NAME'];
 		if (isset($config['EFECTY_DETAILS']))
-			$this->efecty_details = $config['EFECTY_DETAILS']
+			$this->efecty_details = $config['EFECTY_DETAILS'];
 
 		$this->bootstrap = true;
 
