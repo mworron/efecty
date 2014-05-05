@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <p class="payment_module">
-	<a href="{$link->getModuleLink('efecty', 'payment')}" title="{l s='Pay using Efecty' mod='efecty'}">
-		<img src="{$this_path}efecty.jpg" alt="{l s='Pay using Efecty' mod='efecty'}" width="86" height="49"/>
-		{l s='Pay using Efecty' mod='efecty'}
+	<a href="{$link->getModuleLink('efecty', 'payment', [], true)|escape:'html'}" title="{l s='Pay by Efecty.' mod='efecty'}">
+		<img src="{$this_path_efecty}efecty.jpg" alt="{l s='Pay by Efecty.' mod='efecty'}" width="86" height="49" />
+		{l s='Pay by Efecy' mod='efecty'} {l s='(You must be report invoice number and DV)' mod='efecty'}
 	</a>
 </p>
