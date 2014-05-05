@@ -27,41 +27,35 @@
 /**
  * @since 1.5.0
  */
-class EfectyValidationModuleFrontController extends ModuleFrontController
+class EfectyPaymentModuleFrontController extends ModuleFrontController
 {
-	public function postProcess()
+	public $ssl = true;
+	public $display_column_left = false;
+
+	/**
+	 * @see FrontController::initContent()
+	 */
+	public function initContent()
 	{
+		parent::initContent();
+
 		$cart = $this->context->cart;
+		if (!$this->module->checkCurrency($cart))
+			Tools::redirect('index.php?controller=order');
 
-		if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active)
-			Tools::redirect('index.php?controller=order&step=1');
+		$this->context->smarty->assign(array(
+			'nbProducts' => $cart->nbProducts(),
+			'cust_currency' => $cart->id_currency,
+			'currencies' => $this->module->getCurrency((int)$cart->id_currency),
+			'total' => $cart->getOrderTotal(true, Cart::BOTH),
+			'isoCode' => $this->context->language->iso_code,
+			'efecty_name' => $this->module->efecty_name,
+			'efecty_details' => Tools::nl2br($this->module->efecty_details),
+			'this_path' => $this->module->getPathUri(),
+			'this_path_efecty' => $this->module->getPathUri(),
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/'
+		));
 
-		// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
-		$authorized = false;
-		foreach (Module::getPaymentModules() as $module)
-			if ($module['name'] == 'efecty')
-			{
-				$authorized = true;
-				break;
-			}
-
-		if (!$authorized)
-			die($this->module->l('This payment method is not available.', 'validation'));
-
-		$customer = new Customer($cart->id_customer);
-
-		if (!Validate::isLoadedObject($customer))
-			Tools::redirect('index.php?controller=order&step=1');
-
-		$currency = $this->context->currency;
-		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-
-		$mail_vars =	array(
-			'{efecty_name}' => Configuration::get('EFECTY_NAME'),
-			'{efecty_details}' => Configuration::get('EFECTY_DETAILS'),
-			'{efecty_details_html}' => str_replace("\n", '<br />', Configuration::get('EFECTY_DETAILS')));
-
-		$this->module->validateOrder((int)$cart->id, Configuration::get('PS_OS_EFECTY'), $total, $this->module->displayName, NULL, $mail_vars, (int)$currency->id, false, $customer->secure_key);
-		Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+		$this->setTemplate('payment_execution.tpl');
 	}
 }

@@ -24,24 +24,24 @@
 *}
 
 {if $status == 'ok'}
-	<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='efecty'}
-		<br /><br />
-		{l s='Your check must include:' mod='efecty'}
-		<br /><br />- {l s='Payment amount.' mod='efecty'} <span class="price"><strong>{$total_to_pay|escape:'html'}</strong></span>
-		<br /><br />- {l s='Payable to the order of' mod='efecty'} <strong>{if $efecty_name}{$efecty_name|escape:'html'}{else}___________{/if}</strong>
-		<br /><br />- {l s='Mail to' mod='efecty'} <strong>{if $efecty_details}{$efecty_details|escape:'html'}{else}___________{/if}</strong>
+	<p class="alert alert-success">{l s='Your order on %s is complete.' sprintf=$shop_name mod='efecty'}</p>
+    <div class="box order-confirmation">
+    <h3 class="page-subheading">{l s='Your payment must include:' mod='efecty'}</h3>
+		- {l s='Payment amount.' mod='efecty'} <span class="price"><strong>{$total_to_pay}</strong></span>
+		<br />- {l s='Payable to the order of' mod='efecty'} <strong>{if $efecty_name}{$efecty_name|escape:'html'}{else}___________{/if}</strong>
+		<br />- {l s='To this details' mod='efecty'} <strong>{if $efecty_details}{$efecty_details|escape:'html'}{else}___________{/if}</strong>
 		{if !isset($reference)}
-			<br /><br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order|escape:'html' mod='efecty'}
+			<br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order mod='efecty'}
 		{else}
-			<br /><br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference|escape:'html' mod='efecty'}
+			<br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference mod='efecty'}
 		{/if}
-		<br /><br />{l s='An email has been sent to you with this information.' mod='efecty'}
-		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment report with the invoice number and DV.' mod='efecty'}</strong>
-		<br /><br />{l s='For any questions or for further information, please contact our' mod='efecty'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='efecty'}</a>.
-	</p>
+		<br />- {l s='An email has been sent to you with this information.' mod='efecty'}
+		<br />- <strong>{l s='Your order will be sent as soon as we receive your payment report.' mod='efecty'}</strong>
+		<br />- {l s='For any questions or for further information, please contact our' mod='efecty'} <a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer service department.' mod='efecty'}</a>.
+	</div>
 {else}
-	<p class="warning">
+	<p class="alert alert-warning">
 		{l s='We have noticed that there is a problem with your order. If you think this is an error, you can contact our' mod='efecty'} 
-		<a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='efecty'}</a>.
+		<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer service department.' mod='efecty'}</a>.
 	</p>
 {/if}

@@ -31,7 +31,7 @@ if (!defined('_PS_VERSION_'))
 class Efecty extends PaymentModule
 {
 	private $_html = '';
-	private $_postErrors = array();
+	private $_post_errors = array();
 
 	public $efecty_name;
 	public $efecty_details;
@@ -48,7 +48,7 @@ class Efecty extends PaymentModule
 		if (isset($config['EFECTY_NAME']))
 			$this->efecty_name = $config['EFECTY_NAME'];
 		if (isset($config['EFECTY_DETAILS']))
-			$this->efecty_details = $config['EFECTY_DETAILS']
+			$this->efecty_details = $config['EFECTY_DETAILS'];
 
 		$this->bootstrap = true;
 
@@ -58,8 +58,9 @@ class Efecty extends PaymentModule
 		$this->description = $this->l('Accept payments using Efecty.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
 
-		if ((!isset($this->efecty_name) || !isset($this->efecty_details) || empty($this->efecty_name) || empty($this->efecty_details)))
+		if (!isset($this->efecty_name) || !isset($this->efecty_details) || empty($this->efecty_name) || empty($this->efecty_details))
 			$this->warning = $this->l('The "Account owner" and "Details" fields must be configured before using this module.');
+
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
 			$this->warning = $this->l('No currency has been set for this module.');
 	
@@ -72,9 +73,11 @@ class Efecty extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('payment') OR !$this->registerHook('paymentReturn'))
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn'))
 			return false;
+
 		$this->_createOrderState();
+
 		return true;
 	}
 
@@ -103,10 +106,10 @@ class Efecty extends PaymentModule
 			if ($orderState->add())
 			{
 				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/logo.jpg', dirname(__FILE__).'/../../img/os/'.(int)$orderState->id.'.gif');
-				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/copymails/en/efecty.html', dirname(__FILE__).'/../../mails/en/efecty.html');
-				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/copymails/en/efecty.txt', dirname(__FILE__).'/../../mails/en/efecty.txt');
-				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/copymails/es/efecty.html', dirname(__FILE__).'/../../mails/es/efecty.html');
-				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/copymails/es/efecty.txt', dirname(__FILE__).'/../../mails/es/efecty.txt');
+				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/mails/en/efecty.html', dirname(__FILE__).'/../../mails/en/efecty.html');
+				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/mails/en/efecty.txt', dirname(__FILE__).'/../../mails/en/efecty.txt');
+				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/mails/es/efecty.html', dirname(__FILE__).'/../../mails/es/efecty.html');
+				@copy(dirname(__FILE__).'/../../modules/'.$this->name.'/mails/es/efecty.txt', dirname(__FILE__).'/../../mails/es/efecty.txt');
 				Configuration::updateValue('PS_OS_EFECTY', (int)$orderState->id);
 			}
 		}
@@ -114,19 +117,21 @@ class Efecty extends PaymentModule
 
 	public function uninstall()
 	{
-		if (!Configuration::deleteByName('EFECTY_DETAILS')
-		|| !Configuration::deleteByName('EFECTY_NAME')
-		|| !parent::uninstall())
+		if (!Configuration::deleteByName('EFECTY_DETAILS') || !Configuration::deleteByName('EFECTY_NAME') || !parent::uninstall())
 			return false;
+
 		if ($this->_deleteOrderState())
 			Configuration::deleteByName('PS_OS_EFECTY');
+
 		$this->_deleteMails();
+
 		return true;
 	}
 	
 	private function _deleteOrderState()
 	{
 		$orderState = new OrderState(Configuration::get('PS_OS_EFECTY'));
+
 		return $orderState->delete();	
 	}
 	
@@ -143,15 +148,15 @@ class Efecty extends PaymentModule
 		if (Tools::isSubmit('btnSubmit'))
 		{
 			$this->_postValidation();
-			if (!count($this->_postErrors))
+			if (!count($this->_post_errors))
 				$this->_postProcess();
 			else
-				foreach ($this->_postErrors as $err)
+				foreach ($this->_post_errors as $err)
 					$this->_html .= $this->displayError($err);
 		}
 
 		$this->_html .= $this->_displayEfecty();
-		$this->_html .= $this->renderForm();
+		$this->_html .= $this->_renderForm();
 
 		return $this->_html;
 	}
@@ -166,9 +171,9 @@ class Efecty extends PaymentModule
 		if (Tools::isSubmit('btnSubmit'))
 		{
 			if (!Tools::getValue('EFECTY_DETAILS'))
-				$this->_postErrors[] = $this->l('Account details are required.');
+				$this->_post_errors[] = $this->l('Account details are required.');
 			elseif (!Tools::getValue('EFECTY_NAME'))
-				$this->_postErrors[] = $this->l('Account owner is required.');
+				$this->_post_errors[] = $this->l('Account owner is required.');
 		}
 	}
 
@@ -179,7 +184,7 @@ class Efecty extends PaymentModule
 			Configuration::updateValue('EFECTY_NAME', pSQL(Tools::getValue('EFECTY_NAME')));
 			Configuration::updateValue('EFECTY_DETAILS', pSQL(Tools::getValue('EFECTY_DETAILS')));
 		}
-		$this->_html .= $this->displayConfirmation($this->l('Settings updated');
+		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 
 	private function _renderForm()

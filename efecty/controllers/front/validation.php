@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,12 +29,10 @@
  */
 class EfectyValidationModuleFrontController extends ModuleFrontController
 {
-	/**
-	 * @see FrontController::postProcess()
-	 */
 	public function postProcess()
 	{
 		$cart = $this->context->cart;
+
 		if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active)
 			Tools::redirect('index.php?controller=order&step=1');
 
@@ -46,20 +44,24 @@ class EfectyValidationModuleFrontController extends ModuleFrontController
 				$authorized = true;
 				break;
 			}
+
 		if (!$authorized)
 			die($this->module->l('This payment method is not available.', 'validation'));
 
 		$customer = new Customer($cart->id_customer);
+
 		if (!Validate::isLoadedObject($customer))
 			Tools::redirect('index.php?controller=order&step=1');
 
 		$currency = $this->context->currency;
 		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-		$mailVars = array(
-			'{efectyowner}' => Configuration::get('EFECTY_WIRE_OWNER'),
-			'{efectydetails}' => nl2br(Configuration::get('EFECTY_WIRE_DETAILS')),
-		);
-		$this->module->validateOrder($cart->id, Configuration::get('PS_OS_EFECTY'), $total, $this->module->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
-		Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+
+		$mailVars =	array(
+			'{efecty_name}' => Configuration::get('EFECTY_NAME'),
+			'{efecty_details}' => Configuration::get('EFECTY_DETAILS'),
+			'{efecty_details_html}' => str_replace("\n", '<br />', Configuration::get('EFECTY_DETAILS')));
+
+		$this->module->validateOrder((int)$cart->id, Configuration::get('PS_OS_EFECTY'), $total, $this->module->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
+		Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
 	}
 }

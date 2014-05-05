@@ -22,10 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<p class="payment_module">
-	<a href="{$link->getModuleLink('efecty', 'payment', [], true)|escape:'html'}" title="{l s='Pay by Efecty.' mod='efecty'}">
-		<img src="{$this_path_efecty}efecty.jpg" alt="{l s='Pay by Efecty.' mod='efecty'}" width="86" height="49" />
-		{l s='Pay by Efecy' mod='efecty'} {l s='(You must be report invoice number and DV)' mod='efecty'}
-	</a>
-</p>
+<div class="row">
+	<div class="col-xs-12 col-md-6">
+        <p class="payment_module">
+            <a class="cash" href="{$link->getModuleLink('efecty', 'payment', [], true)|escape:'html':'UTF-8'}" title="{l s='Pay by Efecty.' mod='efecty'}">
+                {l s='Pay by Efecty' mod='efecty'} <span>{l s='(send your payment support)' mod='efecty'}</span>
+            </a>
+        </p>
+    </div>
+</div>

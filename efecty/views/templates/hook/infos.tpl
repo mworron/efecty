@@ -27,5 +27,5 @@
 <img src="../modules/efecty/efecty.jpg" style="float:left; margin-right:15px;" width="86" height="49">
 <p><strong>{l s="This module allows you to accept payments by Efecty." mod='efectyc'}</strong></p>
 <p>{l s="If the client chooses this payment method, the order status will change to 'Efecty: Waiting for payment.'" mod='efecty'}</p>
-<p>{l s="You will need to manually confirm the order as soon as you receive a check." mod='efecty'}</p>
+<p>{l s="You will need to manually confirm the order as soon as you receive a payment." mod='efecty'}</p>
 </div>
